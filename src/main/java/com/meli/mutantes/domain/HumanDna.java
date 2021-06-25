@@ -23,6 +23,11 @@ public class HumanDna {
 		return invalid == 0 && dna.length >= 4;
 	}
 
+	/**
+	 * convierte una lista dna en una matrix dna 
+	 * @param dna matrix de DNA
+	 * @return matrix dna
+	 */
 	public char[][] getMatrix(String[] dna) {
 		char[][] dnaMx = new char[dna.length][dna.length];
 		for (int i = 0; i < dna.length; i++) {
@@ -31,6 +36,11 @@ public class HumanDna {
 		return dnaMx;
 	}
 
+	/**
+	 * obtiene lista de secuencias verticales
+	 * @param dna matrix de DNA
+	 * @return lista de posibles secuencias oblicuas viables
+	 */
 	public List<String> getVerticales(char[][] dna) {
 		List<String> result = new LinkedList<>();
 		StringBuffer sb = new StringBuffer();
@@ -44,6 +54,11 @@ public class HumanDna {
 		return result;
 	}
 
+	/**
+	 * Obtiene una lista con las oblicuas posibles, es decir, que la secuencia tenga al menos 4 caracteres
+	 * @param dna matrix de DNA
+	 * @return lista de posibles secuencias oblicuas viables
+	 */
 	public List<String> getOblicuas(char[][] dna) {
 		List<String> result = new LinkedList<>();
 		int i = 0;
@@ -73,12 +88,23 @@ public class HumanDna {
 		}
 		return result;
 	}
-
+	
+	/**
+	 * verifica si cada secuencia dna tiene 4 letras iguales, haciendo el chequeo con una expresion regular
+	 * @param dna lista de secuencias de DNA
+	 * @return número de mutantes
+	 */
 	private long checkDna(List<String> dna) {
 		Pattern checkDna = Pattern.compile(REGEX_MUTANT);
 		return dna.parallelStream().mapToLong(x -> checkDna.matcher(x).results().count()).sum();
 	}
 
+	/**
+	 * verifica mutantes en las secuencias verticales
+	 * @param dna matrix de DNA
+	 * @param mutants cuantas secuencias de mutante se ha encontrado hasta el momento de llamar a este metodo
+	 * @return número de mutantes
+	 */
 	private long checkVertical(char[][] dna, long mutants) {
 		if (mutants <= 1) {
 			List<String> vertical = getVerticales(dna);
@@ -87,6 +113,13 @@ public class HumanDna {
 		return mutants;
 	}
 	
+	/**
+	 * Verifica si hay letras igual en las oblicuas: primero izquierda-derecha y luego derecha-izquierda
+	 * @param originalDna DNA original
+	 * @param dna Matriz de la secuencia DNA
+	 * @param mutants cuantas secuencias de mutante se ha encontrado hasta el momento de llamar a este metodo
+	 * @return número de mutantes
+	 */
 	private long checkOblicuas(String[] originalDna, char[][] dna, long mutants) {
 		if (mutants <= 1) {
 			//oblicuas de izquierda a derecha
@@ -106,7 +139,14 @@ public class HumanDna {
 		return mutants;
 	}
 	
-
+	/**
+	 * Verifica si una secuencia pertence a un mutante buscando si hay 4 letras repetidas.
+	 * Se trata de detener la busqueda cuando se consiga al menos 2 secuencias de 4 letras iguales. Ya que
+	 * Sabrás si un humano es mutante, si encuentras más de una secuencia de cuatro letras 
+	 * iguales​, de forma oblicua, horizontal o vertical."
+	 * @param dna Secuencia de DNA
+	 * @return Verdadero si dna corresponde a un mutante
+	 */
 	public boolean isMutant(String[] dna) {
 
 		long result = checkDna(Arrays.asList(dna));

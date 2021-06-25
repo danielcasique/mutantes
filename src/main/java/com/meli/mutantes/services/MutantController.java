@@ -27,7 +27,9 @@ public class MutantController {
 		super();
 		this.handler = handler;
 	}
-	
+
+
+
 	@PostMapping(value = "/mutant", consumes = "application/json")
 	public void checkDna(@RequestBody DnaDto input, HttpServletResponse response) throws Exception {
 		HumanDna checker = new HumanDna();
